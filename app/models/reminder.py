@@ -9,8 +9,5 @@ class Reminder(Base):
     description = Column(String)
     shouldRepeat = Column(Boolean, default=False)
 
-    # Clave foránea
+  
     habit_id = Column(Integer, ForeignKey('habits.id_habit'))
-
-    # Relación
-    habit = relationship("Habit", back_populates="reminders_list")

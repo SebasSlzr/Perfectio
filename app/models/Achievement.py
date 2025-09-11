@@ -11,4 +11,4 @@ class Achievement(Base):
     # Relaciones
     user = relationship("User", back_populates="achievements")
     emblem = relationship("Emblem", back_populates="achievement", uselist=False)  # Relación 1:1
-    reward = relationship("Reward", back_populates="achievement", uselist=False)
+  
