@@ -7,9 +7,6 @@ from typing import Optional, List
 # --- BASE/CREATE SCHEMAS ---
 # Define los campos que se esperan al CREAR o actualizar un hábito.
 
-# Nota: Si usas FastAPI/Pydantic, BaseModel debe importarse
-# from pydantic import BaseModel
-# Reemplaza 'object' con tu clase base de Schema si es necesario.
 
 class HabitBase(object):
     """Estructura base del Hábito, utilizada para crear/actualizar."""
