@@ -1,10 +1,6 @@
-from typing import Union
-
 from fastapi import FastAPI
+from app.routes import reminder_routes
 
-app = FastAPI()
+app = FastAPI(title="PerfectioAPI")
 
-
-@app.get("/")
-def read_root():
-    return {"Hello": "Amogus"}
+app.include_router(reminder_routes.router)
