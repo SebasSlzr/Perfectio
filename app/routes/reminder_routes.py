@@ -5,39 +5,27 @@ from app.schemas.reminder import ReminderCreate, ReminderUpdate
 
 router = APIRouter()
 
-# GET /habits/{habit_id}/reminders
-@router.get("/habits/{habit_id}/reminders")
-async def list_reminders(
-    habit_id: int = Path(..., description="ID del hábito asociado"),
-    skip: int = 0,
-    limit: int = 100,
-    db: AsyncSession = Depends(get_db)
-):
-    return {"msg": f"Listar recordatorios del hábito {habit_id} (skip={skip}, limit={limit})"}
+# GET /reminders/list
+@router.get("/list")
+async def list_reminders(skip: int = 0, limit: int = 100, db: AsyncSession = Depends(get_db)):
+    return {"msg": f"Listar recordatorios (skip={skip}, limit={limit})"}
 
+# GET /reminders/{reminder_id}
+@router.get("/{reminder_id}")
+async def get_reminder(reminder_id: int = Path(..., description="ID del recordatorio"), db: AsyncSession = Depends(get_db)):
+    return {"msg": f"Información del recordatorio {reminder_id}"}
 
-# POST /habits/{habit_id}/reminders
-@router.post("/habits/{habit_id}/reminders", response_model=ReminderCreate)
-async def create_reminder(
-    habit_id: int = Path(..., description="ID del hábito asociado"),
-    db: AsyncSession = Depends(get_db)
-):
-    return {"msg": f"Recordatorio creado correctamente para el hábito {habit_id}"}
-
+# POST /reminders/
+@router.post("/", response_model=ReminderCreate)
+async def create_reminder(db: AsyncSession = Depends(get_db)):
+    return {"msg": "Recordatorio creado correctamente"}
 
 # PUT /reminders/{reminder_id}
-@router.put("/reminders/{reminder_id}")
-async def update_reminder(
-    reminder_id: int = Path(..., description="ID del recordatorio a actualizar"),
-    db: AsyncSession = Depends(get_db)
-):
-    return {"msg": f"Recordatorio {reminder_id} actualizado correctamente"}
-
+@router.put("/{reminder_id}")
+async def update_reminder(reminder_id: int, db: AsyncSession = Depends(get_db)):
+    return {"msg": f"Recordatorio {reminder_id} actualizado"}
 
 # DELETE /reminders/{reminder_id}
-@router.delete("/reminders/{reminder_id}")
-async def delete_reminder(
-    reminder_id: int = Path(..., description="ID del recordatorio a eliminar"),
-    db: AsyncSession = Depends(get_db)
-):
-    return {"msg": f"Recordatorio {reminder_id} eliminado correctamente"}
+@router.delete("/{reminder_id}")
+async def delete_reminder(reminder_id: int, db: AsyncSession = Depends(get_db)):
+    return {"msg": f"Recordatorio {reminder_id} eliminado"}
