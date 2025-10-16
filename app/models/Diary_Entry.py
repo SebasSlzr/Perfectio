@@ -10,5 +10,5 @@ class Diary_Entry(Base):
     # Clave foránea
     diary_id = Column(Integer, ForeignKey('diaries.id_diary'))
 
-    # Relación
+   
     diary = relationship("Diary", back_populates="entries")

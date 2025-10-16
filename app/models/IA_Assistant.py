@@ -7,8 +7,7 @@ class IA_Assistant(Base):
     user_context = Column(Text)
     messages_history = Column(Text)
 
-    # Clave foránea
     user_id = Column(Integer, ForeignKey('users.id_user'), unique=True)
 
-    # Relación
+ 
     user = relationship("User", back_populates="ia_assistant")

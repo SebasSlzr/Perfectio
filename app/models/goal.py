@@ -16,4 +16,4 @@ class Goal(Base):
     # Relaciones
     user = relationship("User", back_populates="goals")
     habits = relationship("Habit", back_populates="goal")
-    milestones = relationship("Milestone", back_populates="goal")
+
