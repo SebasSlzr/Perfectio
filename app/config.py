@@ -13,6 +13,3 @@ class Settings(BaseSettings):
 
 settings = Settings()
 
-@app.on_event("startup")
-async def on_startup():
-    await create_tables()

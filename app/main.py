@@ -10,6 +10,8 @@ app = FastAPI(
 app.include_router(goal_routes.router, prefix="/goals", tags=["Goals"])
 app.include_router(habit_routes.router, prefix="/habits", tags=["Habits"])
 app.include_router(reminder_routes.router, prefix="/reminders", tags=["Reminders"])
+
+
 @app.get("/", tags=["Root"])
 def read_root():
     return {
