@@ -1,24 +1,28 @@
-from sqlalchemy import Column, Integer, String, Date, Boolean
-from sqlalchemy.orm import relationship
+# /schemas/habit_schema.py
 
-class Habit(Base):
-    __tablename__ = 'habits'
-    id_habit = Column(Integer, primary_key=True, index=True)
-    title = Column(String, nullable=False)
-    tag = Column(String)
-    start_date = Column(Date, nullable=False)
-    frequency = Column(String, nullable=False)  # Ejemplo: "daily", "weekly"
-    reminders = Column(Boolean, default=False)
-    notes = Column(String)
-    color = Column(String)
-    icon = Column(String)
-    state = Column(String, nullable=False)  # Ejemplo: "active", "inactive"
+from datetime import date
+from typing import Optional, List
+from pydantic import BaseModel  # 👈 IMPORTANTE
 
-    # Claves foráneas
-    user_id = Column(Integer, ForeignKey('users.id_user'))
-    goal_id = Column(Integer, ForeignKey('goals.id_goal'), nullable=True)
 
-    # Relaciones
-    user = relationship("User", back_populates="habits")
-    goal = relationship("Goal", back_populates="habits")
-    reminders_list = relationship("Reminder", back_populates="habit")
+class HabitBase(BaseModel):  # 👈 Debe heredar de BaseModel
+    """Estructura base del Hábito, utilizada para crear/actualizar."""
+    title: str
+    tag: str
+    start_date: date
+    frequency: str  # Ej: "diario", "lunes, miercoles, viernes"
+    reminders: List[str]  # Lista de horarios, Ej: ["09:00", "18:30"]
+    notes: Optional[str] = None
+    color: str
+    icon: str
+    state: str = "activo"  # Estado por defecto al crear
+
+
+class HabitCreate(HabitBase):
+    """Schema para la creación de un nuevo Hábito."""
+    pass
+
+
+class Habit(HabitBase):
+    """Schema completo del Hábito, incluyendo el ID de la base de datos."""
+    id_habit: int

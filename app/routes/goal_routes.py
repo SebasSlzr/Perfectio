@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Path
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.database import get_db
-from app.schemas.goal import GoalCreate, GoalUpdate 
+from app.database import get_db
+from app.schemas.goal_schemas import GoalCreate, GoalUpdate 
 
 router = APIRouter()
 

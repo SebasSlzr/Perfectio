@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Path
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.database import get_db
-from app.schemas.reminder import ReminderCreate, ReminderUpdate
+from app.database import get_db
+from app.schemas.reminder_schema import ReminderCreate, ReminderUpdate
 
 router = APIRouter()
 

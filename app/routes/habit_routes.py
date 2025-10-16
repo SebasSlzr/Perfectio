@@ -3,6 +3,8 @@
 from fastapi import APIRouter, HTTPException, status
 from typing import List
 from app.schemas import Habit, HabitCreate
+from app.database import get_db
+
 
 # Asegúrate de que esta importación apunte correctamente a tus schemas
 

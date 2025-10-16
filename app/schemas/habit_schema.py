@@ -2,13 +2,11 @@
 
 from datetime import date
 from typing import Optional, List
+from pydantic import BaseModel
 
 
-# --- BASE/CREATE SCHEMAS ---
-# Define los campos que se esperan al CREAR o actualizar un hábito.
 
-
-class HabitBase(object):
+class HabitBase(BaseModel):
     """Estructura base del Hábito, utilizada para crear/actualizar."""
     title: str
     tag: str
@@ -34,6 +32,3 @@ class Habit(HabitBase):
     """Schema completo del Hábito, incluyendo el ID de la base de datos."""
     id_habit: int  # Se espera que la BD asigne este ID
 
-    # Aquí iría la configuración para que el objeto se pueda mapear
-    # class Config:
-    #    from_attributes = True

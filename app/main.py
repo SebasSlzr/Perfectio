@@ -15,4 +15,4 @@ def read_root():
     return {
         "message": "Bienvenido a Perfectio"
     }
-
+    
