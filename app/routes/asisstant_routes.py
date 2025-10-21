@@ -1,7 +1,7 @@
 # /app/routers/assistant_router.py
 
 from fastapi import APIRouter
-from ..schemas.assistant_schema import ChatRequest, ChatResponse
+from ..schemas.asisstant_schema import ChatRequest, ChatResponse
 from ..controllers import assistant_controller
 
 
