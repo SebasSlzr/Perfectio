@@ -5,7 +5,7 @@ from app.routes import reminder_routes
 from app.routes import auth_routes
 from app.routes import asisstant_routes
 from app.routes import diary_routes
-
+from app.routes import achievement_routes
 
 app = FastAPI(
     title="Perfectio"
@@ -17,7 +17,7 @@ app.include_router(reminder_routes.router, prefix="/reminders", tags=["Reminders
 app.include_router(auth_routes.router, prefix="/auth", tags=["Authentication"])
 app.include_router(asisstant_routes.router, prefix="/assistant", tags=["Assistant"])
 app.include_router(diary_routes.router, prefix="/diary", tags=["Diary"])
-
+app.include_router(achievement_routes.router, prefix="/achievements", tags=["Achievements"])    
 
 
 @app.get("/", tags=["Root"])
