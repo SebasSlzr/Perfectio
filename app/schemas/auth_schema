@@ -1,0 +1,43 @@
+from typing import Optional
+
+
+# --- BASE/CREATE SCHEMAS ---
+# Define los campos que se esperan al registrar o autenticar un usuario.
+
+
+class AuthBase(object):
+    """Estructura base del Usuario para autenticación y registro."""
+    username: str
+    name: str
+    email: str
+    password: str
+
+
+class AuthRegister(AuthBase):
+    """Schema para la creación (registro) de un nuevo usuario."""
+    # Hereda todos los campos de AuthBase.
+    pass
+
+
+class AuthLogin(object):
+    """Schema para el inicio de sesión."""
+    username: str
+    password: str
+
+
+# --- RESPONSE SCHEMA ---
+# Define cómo se ve el Usuario cuando se obtiene (GET) desde la API.
+
+class AuthUser(AuthBase):
+    """Schema completo del Usuario, incluyendo el ID de la base de datos."""
+    id_user: int  # Se espera que la BD asigne este ID
+
+    # class Config:
+    #     from_attributes = True
+
+
+class AuthToken(object):
+    """Schema de respuesta para el login exitoso (token JWT)."""
+    access_token: str
+    token_type: str = "bearer"
+
