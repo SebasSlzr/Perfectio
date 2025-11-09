@@ -1,57 +1,23 @@
-# /routers/diary_routes.py
+# app/routes/diary_routes.py
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_db
+from schemas import Diary, DiaryCreate, DiaryEntry, DiaryEntryCreate
 
-from fastapi import APIRouter, HTTPException, status
-from typing import List
-from app.schemas import Diary, DiaryCreate, DiaryEntry, DiaryEntryCreate
+router = APIRouter()
 
-router = APIRouter(
-    prefix="/diary",
-    tags=["Diary"]
-)
+@router.get("/{user_id}", response_model=Diary)
+async def get_diary(user_id: int, db: AsyncSession = Depends(get_db)):
+    return {"msg": f"Diario del usuario {user_id}"}
 
+@router.post("/", response_model=Diary)
+async def create_diary(diary: DiaryCreate, db: AsyncSession = Depends(get_db)):
+    return {"msg": "Diario creado correctamente"}
 
-# --- Implementacion de endpoints---
+@router.get("/{diary_id}/entries", response_model=list[DiaryEntry])
+async def list_diary_entries(diary_id: int, db: AsyncSession = Depends(get_db)):
+    return {"msg": f"Entradas del diario {diary_id}"}
 
-
-# GET /diary  → Obtener todos los diarios
-@router.get("/", response_model=List[Diary])
-def get_all_diaries():
-    """Obtiene la lista de todos los diarios."""
-    # Lógica DB aquí
-    return []
-
-
-# POST /diary/entries → Crear nueva entrada
-@router.post("/entries", response_model=DiaryEntry, status_code=status.HTTP_201_CREATED)
-def create_entry(entry_data: DiaryEntryCreate):
-    """Crea una nueva entrada en el diario."""
-    # Lógica DB aquí
-    new_id = 1  # Simula ID generado por DB
-    return DiaryEntry(id_entry=new_id, diary_id=1, **entry_data.model_dump())
-
-
-# GET /diary/entries/{entry_id} → Obtener entrada por ID
-@router.get("/entries/{entry_id}", response_model=DiaryEntry)
-def get_entry(entry_id: int):
-    """Obtiene una entrada del diario por su ID."""
-    # Lógica DB: Buscar en base de datos
-    if entry_id != 1:  # Simulación de inexistente
-        raise HTTPException(status_code=404, detail="Entrada no encontrada")
-
-    return DiaryEntry(id_entry=entry_id, diary_id=1, date="2025-01-01T08:00:00", content="Día productivo")
-
-
-# PUT /diary/entries/{entry_id} → Actualizar una entrada existente
-@router.put("/entries/{entry_id}", response_model=DiaryEntry)
-def update_entry(entry_id: int, entry_data: DiaryEntryCreate):
-    """Actualiza el contenido de una entrada existente."""
-    # Lógica DB aquí
-    return DiaryEntry(id_entry=entry_id, diary_id=1, **entry_data.model_dump())
-
-
-# DELETE /diary/entries/{entry_id} → Eliminar una entrada
-@router.delete("/entries/{entry_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_entry(entry_id: int):
-    """Elimina una entrada del diario por su ID."""
-    # Lógica DB aquí
-    return
+@router.post("/{diary_id}/entries", response_model=DiaryEntry)
+async def create_diary_entry(diary_id: int, entry: DiaryEntryCreate, db: AsyncSession = Depends(get_db)):
+    return {"msg": f"Entrada creada en el diario {diary_id}"}

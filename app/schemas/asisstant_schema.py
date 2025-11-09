@@ -1,20 +1,36 @@
-# /schemas/assistant_schema.py
-
+# app/schemas/asisstant_schema.py
 from typing import List, Optional
 from pydantic import BaseModel
 
 class Message(BaseModel):
-    """Define un único mensaje en el historial (usuario o asistente)."""
-    role: str  # Debe ser 'user' o 'assistant'
+    """Mensaje individual en el historial de chat"""
+    role: str
     content: str
 
 class ChatRequest(BaseModel):
-    """Schema para la petición de entrada al endpoint POST /assistant/chat."""
-    id_user: int
-    user_context: Optional[str] = None  # Contexto inicial opcional para la IA
-    messages_history: List[Message]  # Historial completo de la conversación
+    """Peticion para chat con el asistente IA"""
+    user_id: int
+    user_context: Optional[str] = None
+    messages_history: List[Message]
 
 class ChatResponse(BaseModel):
-    """Schema para la respuesta de salida del endpoint."""
-    assistant_reply: str  # Respuesta generada por la IA
-    new_messages_history: List[Message]  # Historial actualizado con la nueva respuesta
+    """Respuesta del asistente IA"""
+    assistant_reply: str
+    new_messages_history: List[Message]
+
+class IAAssistantBase(BaseModel):
+    """Base para el asistente IA"""
+    user_context: Optional[str] = None
+    messages_history: Optional[str] = None
+
+class IAAssistantCreate(IAAssistantBase):
+    """Crear asistente IA"""
+    user_id: int
+
+class IAAssistant(IAAssistantBase):
+    """Asistente IA completo"""
+    id_ia: int
+    user_id: int
+
+    class Config:
+        from_attributes = True

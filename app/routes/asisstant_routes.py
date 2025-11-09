@@ -1,20 +1,19 @@
-# /app/routes/asisstant_routes.py
+# app/routes/asisstant_routes.py
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_db
+from schemas import IAAssistant, IAAssistantCreate, ChatRequest, ChatResponse
 
-from fastapi import APIRouter
-from ..schemas.asisstant_schema import ChatRequest, ChatResponse
+router = APIRouter()
 
-router = APIRouter(
-    prefix="/assistant",
-    tags=["AI Assistant"],
-)
+@router.get("/{user_id}", response_model=IAAssistant)
+async def get_assistant(user_id: int, db: AsyncSession = Depends(get_db)):
+    return {"msg": f"Asistente IA del usuario {user_id}"}
+
+@router.post("/", response_model=IAAssistant)
+async def create_assistant(assistant: IAAssistantCreate, db: AsyncSession = Depends(get_db)):
+    return {"msg": "Asistente IA creado correctamente"}
 
 @router.post("/chat", response_model=ChatResponse)
-def chat_with_assistant(request: ChatRequest):
-    """
-    Endpoint para enviar un mensaje al asistente IA y recibir una respuesta simulada.
-    """
-    # Aquí devuelves una respuesta estática o simulada
-    return ChatResponse(
-        user_message=request.message,
-        assistant_reply=f"Hola! Soy tu asistente. Me dijiste: '{request.message}'"
-    )
+async def chat_with_assistant(chat_request: ChatRequest, db: AsyncSession = Depends(get_db)):
+    return {"msg": "Chat con asistente IA", "assistant_reply": "Respuesta simulada", "new_messages_history": []}

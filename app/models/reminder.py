@@ -1,5 +1,7 @@
+# app/models/reminder.py
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
+from database import Base
 
 class Reminder(Base):
     __tablename__ = 'reminders'
@@ -8,6 +10,6 @@ class Reminder(Base):
     title = Column(String, nullable=False)
     description = Column(String)
     shouldRepeat = Column(Boolean, default=False)
-
-  
     habit_id = Column(Integer, ForeignKey('habits.id_habit'))
+
+    habit = relationship("Habit", back_populates="reminders_rel")
