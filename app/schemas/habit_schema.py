@@ -1,34 +1,35 @@
-# /schemas/habit_schema.py
-
+# app/schemas/habit_schema.py
 from datetime import date
-from typing import Optional, List
+from typing import Optional
 from pydantic import BaseModel
 
-
-
 class HabitBase(BaseModel):
-    """Estructura base del Hábito, utilizada para crear/actualizar."""
+    """Base para habito"""
     title: str
     tag: str
     start_date: date
-    frequency: str  # Ej: "diario", "lunes, miercoles, viernes"
-    reminders: List[str]  # Lista de horarios, Ej: ["09:00", "18:30"]
-    notes: Optional[str] = None  # Optional significa que es opcional
+    frequency: str
     color: str
     icon: str
-    state: str = "activo"  # Estado por defecto al crear
-
+    state: str = "activo"
 
 class HabitCreate(HabitBase):
-    """Schema para la creación de un nuevo Hábito."""
-    # En este caso, hereda todos los campos de HabitBase.
-    pass
+    """Crear habito"""
+    user_id: int
 
-
-# --- RESPONSE SCHEMA ---
-# Define cómo se ve el Hábito cuando se lee (GET) desde la API.
+class HabitUpdate(BaseModel):
+    """Actualizar habito"""
+    title: Optional[str] = None
+    tag: Optional[str] = None
+    frequency: Optional[str] = None
+    color: Optional[str] = None
+    icon: Optional[str] = None
+    state: Optional[str] = None
 
 class Habit(HabitBase):
-    """Schema completo del Hábito, incluyendo el ID de la base de datos."""
-    id_habit: int  # Se espera que la BD asigne este ID
+    """Habito completo"""
+    id_habit: int
+    user_id: int
 
+    class Config:
+        from_attributes = True

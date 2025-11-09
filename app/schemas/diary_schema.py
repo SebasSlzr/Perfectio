@@ -1,45 +1,38 @@
-# /schemas/diary_schema.py
-
+# app/schemas/diary_schema.py
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 
-
-# --- BASE SCHEMAS ---
 class DiaryEntryBase(BaseModel):
-    """Estructura base de una entrada del diario."""
+    """Base para entrada de diario"""
     date: datetime
     content: str
 
-
 class DiaryEntryCreate(DiaryEntryBase):
-    """Schema para crear una nueva entrada."""
-    pass
-
+    """Crear entrada de diario"""
+    diary_id: int
 
 class DiaryEntry(DiaryEntryBase):
-    """Schema completo de una entrada, incluyendo su ID y referencia al diario."""
+    """Entrada de diario completa"""
     id_entry: int
     diary_id: int
 
     class Config:
         from_attributes = True
 
-
 class DiaryBase(BaseModel):
-    """Estructura base del Diario (asociado a un usuario)."""
-    user_id: int
-
-
-class DiaryCreate(DiaryBase):
-    """Schema para crear un diario nuevo (por ejemplo, al registrar usuario)."""
+    """Base para diario"""
     pass
 
+class DiaryCreate(DiaryBase):
+    """Crear diario"""
+    user_id: int
 
 class Diary(DiaryBase):
-    """Schema completo de un diario, con sus entradas."""
+    """Diario completo"""
     id_diary: int
-    entries: Optional[list[DiaryEntry]] = []
+    user_id: int
+    entries: List[DiaryEntry] = []
 
     class Config:
         from_attributes = True

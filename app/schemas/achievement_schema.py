@@ -1,30 +1,22 @@
-# /schemas/achievement_schema.py
-
+# app/schemas/achievement_schema.py
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 
-
-# --- BASE SCHEMA ---
 class AchievementBase(BaseModel):
-    """Estructura base de un logro, usada para crear o actualizar."""
+    """Estructura base de un logro"""
     title: str
     description: Optional[str] = None
-    date: datetime
-    user_id: int  # Clave foránea hacia el usuario
+    image_url: Optional[str] = None
+    points_awarded: int = 0
 
-
-# --- CREATE SCHEMA ---
 class AchievementCreate(AchievementBase):
-    """Schema para creación de logros."""
+    """Schema para crear un logro"""
     pass
 
-
-# --- RESPONSE SCHEMA ---
 class Achievement(AchievementBase):
-    """Schema completo del logro, incluyendo su ID y emblema relacionado."""
+    """Schema completo del logro"""
     id_achievement: int
-    emblem: Optional[str] = None  # Podría ser el nombre del emblema si se relaciona
 
     class Config:
-        from_attributes = True  # Permite convertir desde modelos ORM
+        from_attributes = True
