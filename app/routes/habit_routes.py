@@ -1,5 +1,4 @@
-# app/routes/habit_routes.py
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from schemas import Habit, HabitCreate, HabitUpdate
