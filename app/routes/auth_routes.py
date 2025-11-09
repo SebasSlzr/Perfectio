@@ -1,20 +1,15 @@
-from app.database import get_db
-from fastapi import APIRouter
-from sqlalchemy.ext.asyncio import AsyncSession
+# app/routes/auth_routes.py
 from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_db
+from schemas import AuthRegister, AuthLogin, AuthUser, AuthToken
+
 router = APIRouter()
 
-### Router.post("/register")
-@router.post("/register")
-async def register_user(db: AsyncSession = Depends(get_db)):
-    return {"msg": "Usuario registrado exitosamente"}
+@router.post("/register", response_model=AuthUser)
+async def register(user: AuthRegister, db: AsyncSession = Depends(get_db)):
+    return {"msg": "Usuario registrado correctamente"}
 
-### Router.post("/login")
-@router.post("/login")
-async def login_user(db: AsyncSession = Depends(get_db)):
-    return {"msg": "Login exitoso", "access_token": "token_jwt_aqui"}
-
-### Router.post("/logout")
-@router.post("/logout")
-async def logout_user(db: AsyncSession = Depends(get_db)):
-    return {"msg": "Logout exitoso"}
+@router.post("/login", response_model=AuthToken)
+async def login(credentials: AuthLogin, db: AsyncSession = Depends(get_db)):
+    return {"msg": "Login exitoso", "access_token": "fake_token", "token_type": "bearer"}
