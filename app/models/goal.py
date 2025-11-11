@@ -1,13 +1,13 @@
 # app/models/goal.py
-from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Date, Float, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from database import Base
+from app.database import Base
 
 class Goal(Base):
     __tablename__ = 'goals'
     id_goal = Column(Integer, primary_key=True, index=True)
-    title = Column(String, nullable=False)
-    description = Column(String)
+    title = Column(String(100), nullable=False)
+    description = Column(Text)
     start_date = Column(Date, nullable=False)
     end_date = Column(Date)
     progress = Column(Float, default=0.0)

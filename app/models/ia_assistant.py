@@ -1,7 +1,7 @@
 # app/models/ia_assistant.py
 from sqlalchemy import Column, Integer, Text, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+from app.database import Base
 
 class IAAssistant(Base):
     __tablename__ = 'ia_assistants'

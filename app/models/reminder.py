@@ -1,14 +1,14 @@
 # app/models/reminder.py
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+from app.database import Base
 
 class Reminder(Base):
     __tablename__ = 'reminders'
     id_reminder = Column(Integer, primary_key=True, index=True)
     date = Column(DateTime, nullable=False)
-    title = Column(String, nullable=False)
-    description = Column(String)
+    title = Column(String(100), nullable=False)
+    description = Column(String(255))
     shouldRepeat = Column(Boolean, default=False)
     habit_id = Column(Integer, ForeignKey('habits.id_habit'))
 

@@ -1,7 +1,7 @@
 # app/models/goal_habit.py
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+from app.database import Base
 
 class GoalHabit(Base):
     __tablename__ = 'goal_habit'

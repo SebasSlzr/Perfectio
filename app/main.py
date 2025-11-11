@@ -1,7 +1,7 @@
 # app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import (
+from app.routes import (
     user_routes, 
     habit_routes, 
     goal_routes, 
@@ -13,8 +13,8 @@ from routes import (
     goal_habit_routes,
     user_achievement_routes
 )
-from database import create_tables
-import models
+from app.database import create_tables
+from app import models
 
 app = FastAPI(title="Perfectio")
 

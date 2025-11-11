@@ -1,7 +1,7 @@
 # app/models/user_achievement.py
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+from app.database import Base
 
 class UserAchievement(Base):
     __tablename__ = 'user_achievements'

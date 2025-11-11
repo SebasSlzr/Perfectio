@@ -1,8 +1,8 @@
 # app/routes/asisstant_routes.py
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import get_db
-from schemas import IAAssistant, IAAssistantCreate, ChatRequest, ChatResponse
+from app.database import get_db
+from app.schemas import IAAssistant, IAAssistantCreate, ChatRequest, ChatResponse
 
 router = APIRouter()
 

@@ -1,7 +1,7 @@
 # app/models/diary.py
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from database import Base
+from app.database import Base
 
 class Diary(Base):
     __tablename__ = 'diaries'
