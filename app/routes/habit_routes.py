@@ -1,30 +1,28 @@
-from fastapi import APIRouter, Depends, HTTPException
+# app/routes/habit_routes.py
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from app.schemas import Habit, HabitCreate, HabitUpdate
+from app.schemas.habit_schema import Habit, HabitCreate, HabitUpdate
+from app.controllers import habit_controller
 
-router = APIRouter()
+router = APIRouter(prefix="/habits", tags=["Habits"])
 
 @router.get("/", response_model=list[Habit])
 async def list_habits(db: AsyncSession = Depends(get_db)):
-    return {"msg": "Lista de todos los hábitos"}
+    return await habit_controller.get_all_habits(db)
 
 @router.get("/{habit_id}", response_model=Habit)
 async def get_habit(habit_id: int, db: AsyncSession = Depends(get_db)):
-    return {"msg": f"Información del hábito {habit_id}"}
+    return await habit_controller.get_habit_by_id(habit_id, db)
 
 @router.post("/", response_model=Habit)
 async def create_habit(habit: HabitCreate, db: AsyncSession = Depends(get_db)):
-    return {"msg": "Hábito creado correctamente"}
+    return await habit_controller.create_habit(habit, db)
 
 @router.put("/{habit_id}", response_model=Habit)
 async def update_habit(habit_id: int, habit: HabitUpdate, db: AsyncSession = Depends(get_db)):
-    return {"msg": f"Hábito {habit_id} actualizado"}
+    return await habit_controller.update_habit(habit_id, habit, db)
 
 @router.delete("/{habit_id}")
 async def delete_habit(habit_id: int, db: AsyncSession = Depends(get_db)):
-    return {"msg": f"Hábito {habit_id} eliminado"}
-
-@router.get("/{habit_id}/reminders")
-async def get_habit_reminders(habit_id: int, db: AsyncSession = Depends(get_db)):
-    return {"msg": f"Recordatorios del hábito {habit_id}"}
+    return await habit_controller.delete_habit(habit_id, db)
