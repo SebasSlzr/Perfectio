@@ -1,32 +1,42 @@
-# app/schemas/goal_schemas.py
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 from datetime import date
 
 class GoalBase(BaseModel):
-    """Base para meta"""
+    """
+    Base schema for Goal, used for shared fields.
+    """
     title: str
     description: Optional[str] = None
     start_date: date
     end_date: Optional[date] = None
     progress: float = 0.0
+    model_config = ConfigDict(from_attributes=True)
 
 class GoalCreate(GoalBase):
-    """Crear meta"""
-    user_id: int
+    """
+    Schema for creating a new Goal (POST).
+    Inherits all fields from GoalBase.
+    """
+    pass
+    model_config = ConfigDict(from_attributes=True)
 
 class GoalUpdate(BaseModel):
-    """Actualizar meta"""
+    """
+    Schema for updating an existing Goal (PATCH/PUT).
+    All fields are optional.
+    """
     title: Optional[str] = None
     description: Optional[str] = None
     start_date: Optional[date] = None
     end_date: Optional[date] = None
     progress: Optional[float] = None
+    model_config = ConfigDict(from_attributes=True)
 
 class Goal(GoalBase):
-    """Meta completa"""
+    """
+    Schema for returning Goal data in responses.
+    """
     id_goal: int
-    user_id: int
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True

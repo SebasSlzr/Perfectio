@@ -1,6 +1,5 @@
 # app/main.py
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from app.routes import (
     user_routes, 
     habit_routes, 
@@ -16,19 +15,19 @@ from app.routes import (
 from app.database import create_tables
 from app import models
 
-app = FastAPI(title="Perfectio")
-
 origins = [
     "http://localhost:3000"
 ]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
+# Crear instancia de FastAPI
+app = FastAPI(
+    title="Perfectio",
+    description="API para la gestión de desarrollo personal",
+    version="1.0.0"
 )
+
+
+# INCLUIR ROUTERS
 
 app.include_router(auth_routes.router, prefix="/auth", tags=["Authentication"])
 app.include_router(user_routes.router, prefix="/users", tags=["Users"])
@@ -41,10 +40,25 @@ app.include_router(achievement_routes.router, prefix="/achievements", tags=["Ach
 app.include_router(goal_habit_routes.router, prefix="/goal-habits", tags=["Goal-Habits"])
 app.include_router(user_achievement_routes.router, prefix="/user-achievements", tags=["User-Achievements"])
 
+
+
 @app.on_event("startup")
 async def on_startup():
+    """Evento que se ejecuta al iniciar la aplicación"""
     await create_tables()
 
+
+
+
+@app.get("/health")
+def health_check():
+    """Endpoint para verificar el estado de la API"""
+    return {
+        "status": "healthy",
+        "service": "Perfectio API",
+        "version": "1.0.0"
+    }
+    
 @app.get("/")
 def read_root():
     return {"message": "Bienvenido a Perfectio"}

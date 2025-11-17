@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.goal_model import Goal
+from app.models.goal import Goal
 from app.schemas.goal_schemas import GoalCreate, GoalUpdate
 
 def get_all_goals(db: Session):
