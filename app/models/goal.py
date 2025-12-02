@@ -11,7 +11,7 @@ class Goal(Base):
     start_date = Column(Date, nullable=False)
     end_date = Column(Date)
     progress = Column(Float, default=0.0)
-    user_id = Column(Integer, ForeignKey('users.id_user'))
+    user_id = Column(Integer, ForeignKey('users.id_user'), nullable=False)
 
     user = relationship("User", back_populates="goals")
     goal_habits = relationship("GoalHabit", back_populates="goal")

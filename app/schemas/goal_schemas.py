@@ -11,6 +11,8 @@ class GoalBase(BaseModel):
     start_date: date
     end_date: Optional[date] = None
     progress: float = 0.0
+    user_id: int
+
     model_config = ConfigDict(from_attributes=True)
 
 class GoalCreate(GoalBase):
@@ -19,7 +21,6 @@ class GoalCreate(GoalBase):
     Inherits all fields from GoalBase.
     """
     pass
-    model_config = ConfigDict(from_attributes=True)
 
 class GoalUpdate(BaseModel):
     """
@@ -31,6 +32,8 @@ class GoalUpdate(BaseModel):
     start_date: Optional[date] = None
     end_date: Optional[date] = None
     progress: Optional[float] = None
+    user_id: Optional[int] = None
+
     model_config = ConfigDict(from_attributes=True)
 
 class Goal(GoalBase):
@@ -38,5 +41,6 @@ class Goal(GoalBase):
     Schema for returning Goal data in responses.
     """
     id_goal: int
+
     model_config = ConfigDict(from_attributes=True)
 

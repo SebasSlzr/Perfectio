@@ -8,6 +8,6 @@ class IAAssistant(Base):
     id_ia = Column(Integer, primary_key=True, index=True)
     user_context = Column(Text)
     messages_history = Column(Text)
-    user_id = Column(Integer, ForeignKey('users.id_user'), unique=True)
+    user_id = Column(Integer, ForeignKey('users.id_user'), unique=True, nullable=False)
 
     user = relationship("User", back_populates="ia_assistant")

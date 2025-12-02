@@ -6,7 +6,7 @@ from app.database import Base
 class Diary(Base):
     __tablename__ = 'diaries'
     id_diary = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id_user'), unique=True)
+    user_id = Column(Integer, ForeignKey('users.id_user'), unique=True, nullable=False)
 
     user = relationship("User", back_populates="diary")
-    entries = relationship("DiaryEntry", back_populates="diary")
+    entries = relationship("DiaryEntry", back_populates="diary", cascade="all, delete-orphan")

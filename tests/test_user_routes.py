@@ -1,27 +1,29 @@
-# D:\UAM\ing software II\Perfectio\tests\test_user_routes.py
+import pytest
+from uuid import uuid4
 
-def test_register_user(client):
-    # Datos de ejemplo para crear un usuario
-    payload = {
-        "email": "newuser@example.com",
-        "password": "Aads12345678"
+pytestmark = pytest.mark.asyncio
+
+
+def _payload(seed: str | None = None):
+    u = seed or uuid4().hex[:6]
+    return {
+        "username": f"user_{u}",
+        "name": f"User {u}",
+        "email": f"user_{u}@example.com",
+        "password": "Pass1234A",
     }
 
-    # Ajusta la ruta según tu proyecto, por ejemplo "/users/register" o similar
-    response = client.post("/users", json=payload)
 
-    assert response.status_code in (200, 201)
-    data = response.json()
-    assert data["email"] == payload["email"]
+async def test_register_user(async_client):
+    payload = _payload()
+    resp = await async_client.post("/users/", json=payload)
+    assert resp.status_code == 201
+    body = resp.json()
+    assert body["email"] == payload["email"]
 
 
-def test_register_user_invalid_email(client):
-    payload = {
-        "email": "no-es-un-email",
-        "password": "12345678"
-    }
-
-    response = client.post("/users", json=payload)
-
-    # Debería fallar por validación (400 normalmente)
-    assert response.status_code in (400, 422)
+async def test_register_user_invalid_email(async_client):
+    payload = _payload("badmail")
+    payload["email"] = "no-es-un-email"
+    resp = await async_client.post("/users/", json=payload)
+    assert resp.status_code == 422

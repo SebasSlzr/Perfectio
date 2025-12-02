@@ -13,8 +13,8 @@ class Habit(Base):
     color = Column(String(20))                           
     icon = Column(String(50))                            
     state = Column(String(20), default="activo")        
-    user_id = Column(Integer, ForeignKey('users.id_user'))
+    user_id = Column(Integer, ForeignKey('users.id_user'), nullable=False)
 
     user = relationship("User", back_populates="habits")
-    reminders_rel = relationship("Reminder", back_populates="habit")
+    reminders_rel = relationship("Reminder", back_populates="habit", cascade="all, delete-orphan")
     goal_habits = relationship("GoalHabit", back_populates="habit")
