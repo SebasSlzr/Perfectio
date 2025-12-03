@@ -41,8 +41,7 @@ app = FastAPI(
     description="API para la gestión de desarrollo personal",
     version="1.0.0",
     openapi_tags=tags_metadata,
-    contact={"name": "Equipo Perfectio", "email": "perfectio-team@example.com"},
-    license_info={"name": "MIT"},
+    contact={"name": "Equipo Perfectio", "email": "perfectio-team@example.com"}
 )
 
 setup_validations(app)
