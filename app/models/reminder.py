@@ -10,6 +10,6 @@ class Reminder(Base):
     title = Column(String(100), nullable=False)
     description = Column(String(255))
     shouldRepeat = Column(Boolean, default=False)
-    habit_id = Column(Integer, ForeignKey('habits.id_habit'))
+    habit_id = Column(Integer, ForeignKey('habits.id_habit'), nullable=False)
 
     habit = relationship("Habit", back_populates="reminders_rel")

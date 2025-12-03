@@ -11,6 +11,9 @@ from app.middleware.validation import (
     validate_password_strength,
     validate_username,
 )
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+from pydantic import ValidationError
 
 __all__ = [
    
@@ -22,6 +25,12 @@ __all__ = [
     "validate_username",
 ]
 
-def setup_validations(app):
+def setup_validations(app: FastAPI):
     """Configurar validaciones globales de la aplicación"""
-    pass
+    # Registra un middleware que convierte ValidationErrors en respuestas JSON uniformes.
+    @app.middleware("http")
+    async def validation_error_handler(request: Request, call_next):
+        try:
+            return await call_next(request)
+        except ValidationError as exc:
+            return JSONResponse(status_code=422, content={"detail": exc.errors()})

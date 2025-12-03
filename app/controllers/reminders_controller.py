@@ -1,48 +1,62 @@
-from typing import List, Optional
-from app.schemas.reminder_schema import ReminderCreate, ReminderUpdate, ReminderResponse
+from fastapi import HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.reminder import Reminder as ReminderModel
+from app.models.habits import Habit as HabitModel
+from app.schemas.reminder_schema import ReminderCreate, ReminderUpdate
 
-_reminders: List[ReminderResponse] = []
-_next_id = 1
-
-def get_reminders_by_habit(habit_id: int) -> List[ReminderResponse]:
-    return [r for r in _reminders if r.habit_id == habit_id]
-
-def get_reminder(reminder_id: int) -> Optional[ReminderResponse]:
-    for r in _reminders:
-        if r.id == reminder_id:
-            return r
-    return None
-
-def create_reminder(habit_id: int, data: ReminderCreate) -> ReminderResponse:
-    global _next_id
-    reminder = ReminderResponse(
-        id=_next_id,
-        habit_id=habit_id,
-        title=data.title,
-        description=data.description,
-        date=data.date,
-        shouldRepeat=data.shouldRepeat
-    )
-    _reminders.append(reminder)
-    _next_id += 1
-    return reminder
-
-def update_reminder(reminder_id: int, data: ReminderUpdate) -> Optional[ReminderResponse]:
-    reminder = get_reminder(reminder_id)
+async def _get_reminder_or_404(reminder_id: int, db: AsyncSession) -> ReminderModel:
+    """Obtiene un recordatorio específico o lanza un 404."""
+    reminder = await db.get(ReminderModel, reminder_id)
     if reminder is None:
-        return None
-    if data.title is not None:
-        reminder.title = data.title
-    if data.description is not None:
-        reminder.description = data.description
-    if data.date is not None:
-        reminder.date = data.date
-    if data.shouldRepeat is not None:
-        reminder.shouldRepeat = data.shouldRepeat
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Recordatorio con ID {reminder_id} no encontrado.",
+        )
     return reminder
 
-def delete_reminder(reminder_id: int) -> bool:
-    global _reminders
-    original_len = len(_reminders)
-    _reminders = [r for r in _reminders if r.id != reminder_id]
-    return len(_reminders) < original_len
+async def _ensure_habit_exists(habit_id: int, db: AsyncSession) -> None:
+    if await db.get(HabitModel, habit_id) is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Habito no encontrado",
+        )
+
+async def get_all_reminders(db: AsyncSession):
+    """Lista todos los recordatorios."""
+    result = await db.execute(select(ReminderModel))
+    return result.scalars().all()
+
+async def get_reminder_by_id(reminder_id: int, db: AsyncSession):
+    """Obtiene un recordatorio específico."""
+    return await _get_reminder_or_404(reminder_id, db)
+
+async def get_reminders_by_habit(habit_id: int, db: AsyncSession):
+    """Devuelve los recordatorios asociados a un hábito."""
+    result = await db.execute(select(ReminderModel).where(ReminderModel.habit_id == habit_id))
+    return result.scalars().all()
+
+async def create_reminder(reminder_data: ReminderCreate, db: AsyncSession):
+    """Crea y persiste un nuevo recordatorio."""
+    await _ensure_habit_exists(reminder_data.habit_id, db)
+    reminder = ReminderModel(**reminder_data.model_dump())
+    db.add(reminder)
+    await db.commit()
+    await db.refresh(reminder)
+    return reminder
+
+async def update_reminder(reminder_id: int, reminder_data: ReminderUpdate, db: AsyncSession):
+    """Actualiza parcialmente un recordatorio."""
+    reminder = await _get_reminder_or_404(reminder_id, db)
+    for key, value in reminder_data.model_dump(exclude_unset=True).items():
+        setattr(reminder, key, value)
+    await db.commit()
+    await db.refresh(reminder)
+    return reminder
+
+async def delete_reminder(reminder_id: int, db: AsyncSession):
+    """Elimina un recordatorio existente."""
+    reminder = await _get_reminder_or_404(reminder_id, db)
+    await db.delete(reminder)
+    await db.commit()
+    return {"detail": f"Recordatorio {reminder_id} eliminado"}
